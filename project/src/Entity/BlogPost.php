@@ -22,7 +22,7 @@ class BlogPost
     private $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="datetime")
      */
     private $published;
 
@@ -30,6 +30,11 @@ class BlogPost
      * @ORM\Column(type="string", length=255)
      */
     private $author;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $slug;
 
     public function getId(): ?int
     {
@@ -71,4 +76,22 @@ class BlogPost
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug(): ?string 
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug): void
+    {
+        $this->slug = $slug;
+    }
+
+
 }
