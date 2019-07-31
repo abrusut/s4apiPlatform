@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
+ * @ApiResource()
  */
 class BlogPost
 {
@@ -32,6 +34,11 @@ class BlogPost
     private $author;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $content;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $slug;
@@ -53,18 +60,6 @@ class BlogPost
         return $this;
     }
 
-    public function getPublished(): ?string
-    {
-        return $this->published;
-    }
-
-    public function setPublished(string $published): self
-    {
-        $this->published = $published;
-
-        return $this;
-    }
-
     public function getAuthor(): ?string
     {
         return $this->author;
@@ -80,7 +75,7 @@ class BlogPost
     /**
      * @return mixed
      */
-    public function getSlug(): ?string 
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
@@ -92,6 +87,40 @@ class BlogPost
     {
         $this->slug = $slug;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPublished():?\DateTimeInterface
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param mixed $published
+     */
+    public function setPublished(\DateTimeInterface $published): void
+    {
+        $this->published = $published;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content): void
+    {
+        $this->content = $content;
+    }
+
+
 
 
 }
