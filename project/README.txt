@@ -18,7 +18,7 @@ NOTA: Las URL que veran a continuacion se tratan symfony en docker con php 7.3 e
 
     php bin/console make:entity
 
-6) Una vez generada la entidad generamos el archivo de migraciones
+6) Una vez generada la entidad generamos el archivo de migraciones para crear tablas, actualizar campos, etc
 
     6.1 Generar archivos de migracion
         php bin/console make:migration
@@ -66,3 +66,67 @@ NOTA: Las URL que veran a continuacion se tratan symfony en docker con php 7.3 e
 
 
 #---------------------------------------------------------------------------------------------------#
+
+
+#-------------------------------- Create User class implements UserInterface -----------------------#
+
+1) php bin/console make:entity
+    > User
+
+    Una vez generada la entidad generamos el archivo de migraciones para crear tablas, actualizar campos, etc
+
+      1.1 Generar archivos de migracion
+           php bin/console make:migration
+
+      1.2 Ejecuar migraciones
+           php bin/console doctrine:migrations:migrate
+
+2) Configuramos Encoders para las claves
+
+    a) En config/packages/security.yaml, agregar:
+     encoders:
+            App\Entity\User: bcrypt
+
+3) En los DataFixtures-> AppFixtures.php agregar constructor que reciba el passwordEncoder
+     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+   Utilizar esta variable para encryptar las claves
+#---------------------------------------------------------------------------------------------------#
+
+#-----------------------------------Install Faker para usar en Fixtures ----------------------------#
+
+Esto es para generar contenido dummy de manera muy facil, ver su uso en este proyecto
+    DataFixtures->AppFixtures.php
+
+1) composer require --dev fzaninotto/faker
+    Solo se necesita en develop por eso el --dev
+
+
+#----------------------------------- API Platform Disabling Operations ----------------------------#
+
+Sobre la entidad que queremos trabajar se puede ocultar endpoints y properties.
+Por ejemplo de la entidad usuario se permiten solo los get de 1 usuario y no los listados.
+Ademas se muestran solo las columnas que tienen group "read"
+
+Al definir collectionOperations vacio, indicamos que no exponga endpoints de getAll
+Y con itemOperation "get" le decimos que solo get de 1 item (no post, ni put)
+@ApiResource(
+ *      itemOperations={"get"},
+ *      collectionOperations={},
+ *      normalizationContext={
+            "groups" = { "read" }
+ *     }
+ * )
+
+#--------------------------------------------PasswordHashSubscriber------------------------------------#
+
+1) Crear carpeta src/EventSubscriber
+2) Crear clase PasswordHashSubscriber implements EventSubscriberInterface
+
+3) Ver servicios creados
+    php bin/console debug:container PasswordHashSubscriber
+
+
+
