@@ -147,20 +147,25 @@ Y con itemOperation "get" le decimos que solo get de 1 item (no post, ni put)
     ###> lexik/jwt-authentication-bundle ###
     JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
     JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
-    JWT_PASSPHRASE=3ed16e2a480d401ae52fb0e3b0722044
+    JWT_PASSPHRASE=mprod
+    TOKEN_TTL=3600
     ###< lexik/jwt-authentication-bundle ###
 
 5) Generar nueva carpeta jwt en config/jwt, para generar las claves privadas y publicas
     Generate the SSH keys:
     $ mkdir -p config/jwt
     5.1) Darle permisos de escritura a config/ chmod 777 -R config/*
+    5.2) Generar clave publica y privada, la clave que solicita es la que configuramos arriba en JWT_PASSPHRASE
+        $ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+        $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+    5.3) Darle permisos de lectura al privatepm en config/jwt/
+        $ chmod 644 private.pem
+    5.4) Crear un .htaccess en la carpeta /public con el siguiente contenido.
+        Esto se hace para que apache no descarte la cabecera de Authorization
+        RewriteEngine On
+        RewriteCond %{HTTP:Authorization} ^(.*)
+        RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
-    $ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-    $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
-
-
-    5.2) openssl genrsa -out config/jwt/private.pem -aes256 4096
-    5.3) openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 6) Configurar User Provider
     read: https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#configuration
@@ -202,9 +207,10 @@ Y con itemOperation "get" le decimos que solo get de 1 item (no post, ni put)
                                 - lexik_jwt_authentication.jwt_token_authenticator
 
     6.3) Configurar access control en config/packages/security.yaml
-        access_control:
-                - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-                - { path: ^/API, roles: IS_AUTHENTICATED_FULLY }
+       access_control:
+               - { path: ^/api/docs, roles: IS_AUTHENTICATED_FULLY }
+               - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+               - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
     6.4) Configurar Rutas de login
         Configure your routing into config/routes.yaml :

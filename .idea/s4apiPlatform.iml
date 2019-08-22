@@ -27,7 +27,11 @@
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/doctrine/reflection" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/easycorp/easyadmin-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/fig/link-util" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/fzaninotto/faker" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/jdorn/sql-formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/lexik/jwt-authentication-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/namshi/jose" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/nelmio/cors-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/ocramius/package-versions" />
