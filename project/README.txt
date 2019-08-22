@@ -130,3 +130,84 @@ Y con itemOperation "get" le decimos que solo get de 1 item (no post, ni put)
 
 
 
+#--------------------------------------------JWT--------------------------------------------------------#
+
+1) Instalar libreria para JWT
+    composer require lexik/jwt-authentication-bundle
+
+2) Revisar que se haya creado el archivo config/packages/lexik_jwt_authentication.yaml
+    lexik_jwt_authentication:
+        secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+        public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+        pass_phrase: '%env(JWT_PASSPHRASE)%'
+3) Revisar que se este levantando el bundle en bundles.php
+    Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
+
+4) Revisar que se crearon los parametros de environment en .env de la raiz del proyecto
+    ###> lexik/jwt-authentication-bundle ###
+    JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+    JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+    JWT_PASSPHRASE=3ed16e2a480d401ae52fb0e3b0722044
+    ###< lexik/jwt-authentication-bundle ###
+
+5) Generar nueva carpeta jwt en config/jwt, para generar las claves privadas y publicas
+    Generate the SSH keys:
+    $ mkdir -p config/jwt
+    5.1) Darle permisos de escritura a config/ chmod 777 -R config/*
+
+    $ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+    $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+
+
+    5.2) openssl genrsa -out config/jwt/private.pem -aes256 4096
+    5.3) openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+
+6) Configurar User Provider
+    read: https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#configuration
+    6.1) Editar config/packages/security.yaml y modificar la seguridad in_memory por la base de datos
+        Antes:
+            providers:
+                    in_memory: { memory: ~ }
+
+        Despues:
+             providers:
+                    # in_memory: { memory: ~ }
+                    database:
+                        entity:
+                            class: App\Entity\User
+                            property: username
+    6.2) Configurar Firewall en config/packages/security.yaml
+        Antes:
+            firewalls:
+                    dev:
+                        pattern: ^/(_(profiler|wdt)|css|images|js)/
+                        security: false
+                    main:
+                        anonymous: true
+        Despues:
+            firewalls:
+                    dev:
+                        pattern: ^/(_(profiler|wdt)|css|images|js)/
+                        security: false
+                    api:
+                        pattern: ^/api
+                        stateless: true
+                        anonymous: true
+                        json_login:
+                            check_path: /api/login_check
+                            success_handler: lexik_jwt_authentication.handler.authentication_success
+                            failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                        guard:
+                            authenticators:
+                                - lexik_jwt_authentication.jwt_token_authenticator
+
+    6.3) Configurar access control en config/packages/security.yaml
+        access_control:
+                - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+                - { path: ^/API, roles: IS_AUTHENTICATED_FULLY }
+
+    6.4) Configurar Rutas de login
+        Configure your routing into config/routes.yaml :
+
+        api_login_check:
+            path: /api/login_check
