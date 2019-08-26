@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -15,20 +18,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     itemOperations={
  *              "get",
  *              "put"={
-                    "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user"
+ *                   "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user"
  *              }
- *
- *
  *     },
  *      collectionOperations={
  *              "get",
  *              "post" = {
-                    "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *                   "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *              }
- *      }
+ *      },
+ *     denormalizationContext={
+            "groups"={"post"}
+ *     }
  *   )
  */
-class BlogPost
+class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
 {
     /**
      * @ORM\Id()
@@ -41,13 +45,12 @@ class BlogPost
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min="5")
+     * @Groups({"post"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
-     * @Assert\DateTime()
      */
     private $published;
 
@@ -61,17 +64,20 @@ class BlogPost
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min="20")
+     * @Groups({"post"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"post"})
      */
     private $slug;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="blogPost")
+     * @ApiSubresource()
      */
     private $comments;
 
@@ -79,8 +85,6 @@ class BlogPost
     {
         $this->comments = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -123,12 +127,11 @@ class BlogPost
         return $this->published;
     }
 
-    /**
-     * @param mixed $published
-     */
-    public function setPublished(\DateTimeInterface $published): void
+
+    public function setPublished(\DateTimeInterface $published): PublishedDateEntityInterface
     {
         $this->published = $published;
+        return $this;
     }
 
     /**
@@ -156,10 +159,10 @@ class BlogPost
     }
 
     /**
-     * @param mixed $author
+     * @param UserInterface $author
      * @return $this
      */
-    public function setAuthor(User $author): self
+    public function setAuthor(UserInterface $author): AuthoredEntityInterface
     {
         $this->author = $author;
         return $this;
