@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
+// get-with-author se define el grupo en Comment para evitar loop infinito
 /**
  * @ApiResource(
  *      itemOperations={
@@ -58,25 +60,17 @@ class User implements UserInterface
 
     const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
 
-
-    public function __construct()
-    {
-        $this->posts = new ArrayCollection();
-        $this->comments = new ArrayCollection();
-        $this->roles = self::DEFAULT_ROLES;
-    }
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get"})
+     * @Groups({"get","get-comment-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "post"})
+     * @Groups({"get", "post","get-comment-with-author","get-blog-post-with-author"})
      * @Assert\NotBlank()
      * @Assert\Length(min=6, max=255)
      */
@@ -105,7 +99,7 @@ class User implements UserInterface
 
 
     /**
-     * @Groups({"get","put", "post"})
+     * @Groups({"get","put", "post", "get-comment-with-author","get-blog-post-with-author"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(min=3, max=255)
@@ -144,6 +138,13 @@ class User implements UserInterface
      * @Groups({"get-admin", "get-owner"})
      */
     private $roles;
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->roles = self::DEFAULT_ROLES;
+    }
 
     public function getId(): ?int
     {
@@ -246,7 +247,7 @@ class User implements UserInterface
      *
      * @return (Role|string)[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
