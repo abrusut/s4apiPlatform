@@ -63,6 +63,8 @@ class ResetPasswordAction
                 $user, $user->getNewPassword()
             )
         );
+        
+        $user->setPasswordChangeDate(time());
     
         /** Force flush, para que ejecute el update contra la base, sino devuelve error de que el oldPassword esta mal, por que
             en realidad ya lo cambio.
