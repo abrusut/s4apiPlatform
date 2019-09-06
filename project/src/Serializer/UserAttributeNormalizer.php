@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 
-class UserAttributeNormalizer implements ContextAwareNormalizerInterface, SerializerAwareInterface
+class UserAttributeNormalizer // implements ContextAwareNormalizerInterface, SerializerAwareInterface
 {
     use SerializerAwareTrait;
 

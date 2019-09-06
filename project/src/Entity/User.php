@@ -8,9 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use App\Controller\ResetPasswordAction;
 
 // get-with-author se define el grupo en Comment para evitar loop infinito
 /**
@@ -29,6 +30,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                      },
  *                   "normalization_context"={
  *                            "groups" = { "get" }
+ *                      }
+ *              },
+ *              "put-reset-password"={
+ *                    "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+ *                     "method"="PUT",
+ *                      "path"="/users/{id}/reset-password",
+ *                      "controller"=ResetPasswordAction::class,
+ *                      "denormalization_context"={
+ *                            "groups" = { "put-reset-password" }
  *                      }
  *              }
  *     },
@@ -71,28 +81,30 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"get", "post","get-comment-with-author","get-blog-post-with-author"})
-     * @Assert\NotBlank()
-     * @Assert\Length(min=6, max=255)
+     * @Assert\NotBlank(groups={"post"})
+     * @Assert\Length(min=6, max=255, groups={"post"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"put", "post"})
-     * @Assert\NotBlank()
+     * @Groups({"post"})
+     * @Assert\NotBlank(groups={"post"})
      * @Assert\Regex(
      *     pattern="/(?=.*[A-Z])(?=.*[a-z)(?=.*[0-9]).{7,}/",
-     *     message="Password debe tener 7 caracteres, 1 mayuscula y 1 numero"
+     *     message="Password debe tener 7 caracteres, 1 mayuscula y 1 numero",
+     *     groups={"post"}
      * )
      */
     private $password;
 
     /**
-     * @Groups({"put", "post"})
-     * @Assert\NotBlank()
+     * @Groups({"post"})
+     * @Assert\NotBlank(groups={"post"})
      * @Assert\Expression(
      *          "this.getPassword() === this.getRetypedPassword()",
-     *     message="Las passwords no son iguales"
+     *          message="Las passwords no son iguales",
+     *          groups={"post"}
      * )
      */
     private $retypedPassword;
@@ -101,16 +113,17 @@ class User implements UserInterface
     /**
      * @Groups({"get","put", "post", "get-comment-with-author","get-blog-post-with-author"})
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Length(min=3, max=255)
+     * @Assert\NotBlank(groups={"post", "put"})
+     * @Assert\Length(min=3, max=255, groups={"post","put"})
      */
     private $name;
 
     /**
      * @Groups({"put", "post", "get-admin", "get-owner"})
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(groups={"post"})
+     * @Assert\Email(groups={"post"})
+     * @Assert\Length(min="6", max="255",groups={"post", "put"})
      */
     private $email;
 
@@ -138,7 +151,33 @@ class User implements UserInterface
      * @Groups({"get-admin", "get-owner"})
      */
     private $roles;
-
+    
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z])(?=.*[a-z)(?=.*[0-9]).{7,}/",
+     *     message="Password debe tener 7 caracteres, 1 mayuscula y 1 numero"
+     * )
+     */
+    private $newPassword;
+    
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @Assert\Expression(
+     *          "this.getNewPassword() === this.getNewRetypedPassword()",
+     *     message="Las passwords no son iguales")
+     */
+    private $newRetypedPassword;
+    
+    /**
+     * @Groups({"put-reset-password"})
+     * @Assert\NotBlank()
+     * @UserPassword()
+     */
+    private $oldPassword;
+    
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -299,4 +338,55 @@ class User implements UserInterface
     {
         $this->retypedPassword = $retypedPassword;
     }
+    
+    /**
+     * @return mixed
+     */
+    public function getNewPassword(): ?string
+    {
+        return $this->newPassword;
+    }
+    
+    /**
+     * @param mixed $newPassword
+     */
+    public function setNewPassword($newPassword): void
+    {
+        $this->newPassword = $newPassword;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getNewRetypedPassword() :?string
+    {
+        return $this->newRetypedPassword;
+    }
+    
+    /**
+     * @param mixed $newRetypedPassword
+     */
+    public function setNewRetypedPassword($newRetypedPassword): void
+    {
+        $this->newRetypedPassword = $newRetypedPassword;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getOldPassword():?string
+    {
+        return $this->oldPassword;
+    }
+    
+    /**
+     * @param mixed $oldPassword
+     */
+    public function setOldPassword($oldPassword): void
+    {
+        $this->oldPassword = $oldPassword;
+    }
+    
+    
+    
 }
