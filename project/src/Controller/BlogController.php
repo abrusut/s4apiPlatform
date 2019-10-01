@@ -62,7 +62,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/add", name="blog_add", methods={"POST"})
      */
-    public function add(Request $request)
+        public function add(Request $request)
     {
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');

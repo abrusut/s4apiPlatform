@@ -27,7 +27,15 @@ class TokenAuthenticator extends JWTTokenAuthenticator
     {
         /** @var User $user */
         $user = parent::getUser($preAuthToken, $userProvider);
-        
+    
+    
+        /**
+         * $preAuthToken->getPayload()['iat'], tiene el dato del timestamp del momento en que se genero el token (login).
+         * Lo que hacemos es compararlo con el timestamp del $user->getPasswordChangeDate() si existe, para ver si hubo
+         * un cambio de clave, marcar ese token como Expirado y obligar al login.
+         * De lo contrario el usuario podria quedar operando con 2 token distintos, el entregado al momento de cambiar la clave,
+         * y el token anterior cuando se logueo.
+         */
         if($user->getPasswordChangeDate() &&
             $preAuthToken->getPayload()['iat'] < $user->getPasswordChangeDate()){
             throw new ExpiredTokenException();
