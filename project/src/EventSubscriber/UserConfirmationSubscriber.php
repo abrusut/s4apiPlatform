@@ -6,13 +6,11 @@ namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\UserConfirmation;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Security\UserConfirmService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -31,18 +29,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var UserRepository
+     * @var UserConfirmService
      */
-    private $userRepository;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private $userConfirmService;
     
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager)
+    public function __construct(UserConfirmService $userConfirmService)
     {
-        $this->userRepository = $userRepository;
-        $this->entityManager = $entityManager;
+        $this->userConfirmService = $userConfirmService;
     }
     
     public static function getSubscribedEvents()
@@ -64,17 +57,8 @@ class UserConfirmationSubscriber implements EventSubscriberInterface
         /** @var UserConfirmation $confirmationToken */
         $confirmationToken = $event->getControllerResult();
         
-        $user = $this->userRepository->findOneBy(
-            [
-                'confirmationToken' => $confirmationToken->confirmationToken
-            ]);
-        if( !$user ){
-            throw new NotFoundHttpException();
-        }
-    
-        $user->setEnabled(true);
-        $user->setConfirmationToken(null);
-        $this->entityManager->flush();
+        // Confirmo el usuario y lo habilito si existe
+        $this->userConfirmService->confirmUser($confirmationToken->confirmationToken );
         
         $event->setResponse(new JsonResponse(null,Response::HTTP_OK));
     }

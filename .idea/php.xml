@@ -99,6 +99,9 @@
       <path value="$PROJECT_DIR$/project/vendor/namshi/jose" />
       <path value="$PROJECT_DIR$/project/vendor/lexik/jwt-authentication-bundle" />
       <path value="$PROJECT_DIR$/project/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/project/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/project/vendor/symfony/swiftmailer-bundle" />
+      <path value="$PROJECT_DIR$/project/vendor/swiftmailer/swiftmailer" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

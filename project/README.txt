@@ -217,3 +217,32 @@ Y con itemOperation "get" le decimos que solo get de 1 item (no post, ni put)
 
         api_login_check:
             path: /api/login_check
+
+#----------------------------------- Swift Mailer Bundle ----------------------------#
+
+Instalar libreria para envio de emails
+
+1) composer require symfony/swiftmailer-bundle
+2) Este bundle agrega una configuracion en el .env y en /config/packages/swiftmail.yaml
+MAILER_URL=gmail://medrasoftnet:PASWORDXXXXXX@localhost
+3) Navegar a https://support.google.com/mail/?p=BadCredentials
+4) habilitar el acceso desde apps menos seguras https://support.google.com/accounts/answer/6010255
+5) Entrar en gmail (correo) y en Configuraciones->Reenvío y correo POP/IMAP
+ habilitar el acceso IMAP
+
+Acceso IMAP:
+(acceder a Gmail desde otros clientes mediante IMAP)
+Más información
+Estado: El acceso IMAP está habilitado
+	Habilitar acceso IMAP
+	Inhabilitar IMAP
+6) Deshabilitar el captcha para la cuenta
+    https://accounts.google.com/DisplayUnlockCaptcha
+   Hacer click en "continuar"
+
+   Exito:
+   Se habilitó el acceso a la cuenta.
+   Intenta volver a acceder a tu Cuenta de Google desde el nuevo dispositivo o aplicación.
+
+#----------------------------------- Vich Uploader Bundle ----------------------------#
+Para upload de imagenes 
