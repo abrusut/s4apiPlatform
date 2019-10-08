@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/project/tests" isTestSource="true" packagePrefix="App\Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/api-platform/api-pack" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/api-platform/core" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/behat/transliterator" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/doctrine/cache" />
@@ -30,6 +31,7 @@
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/fig/link-util" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/fzaninotto/faker" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/jdorn/sql-formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/jms/metadata" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/lexik/jwt-authentication-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/namshi/jose" />
@@ -90,6 +92,7 @@
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/service-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/stopwatch" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/swiftmailer-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/templating" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/translation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/twig-bridge" />
@@ -100,6 +103,7 @@
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/twig/extensions" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/project/vendor/vich/uploader-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/willdurand/negotiation" />
       <excludeFolder url="file://$MODULE_DIR$/project/vendor/zendframework/zend-code" />

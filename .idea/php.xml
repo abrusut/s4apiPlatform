@@ -102,6 +102,10 @@
       <path value="$PROJECT_DIR$/project/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/project/vendor/symfony/swiftmailer-bundle" />
       <path value="$PROJECT_DIR$/project/vendor/swiftmailer/swiftmailer" />
+      <path value="$PROJECT_DIR$/project/vendor/symfony/templating" />
+      <path value="$PROJECT_DIR$/project/vendor/jms/metadata" />
+      <path value="$PROJECT_DIR$/project/vendor/behat/transliterator" />
+      <path value="$PROJECT_DIR$/project/vendor/vich/uploader-bundle" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
