@@ -6,6 +6,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\UploadImageAction;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -13,6 +14,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity()
  * @Vich\Uploadable()
  * @ApiResource(
+ *     attributes={"order"={"id" : "DESC" }},
  *     collectionOperations={
             "get",
  *          "post"={
@@ -43,6 +45,7 @@ class Image
     
     /**
      * @ORM\Column(nullable=true)
+     *  @Groups({"get-blog-post-with-author"})
      */
     private $url;
     
@@ -83,7 +86,7 @@ class Image
      */
     public function getUrl()
     {
-        return $this->url;
+        return '/images/'.$this->url;
     }
     
     /**

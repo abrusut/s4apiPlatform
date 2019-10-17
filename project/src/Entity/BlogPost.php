@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,10 +14,35 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
+ * @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={
+ *              "id"
+ *     }
+ * )
+ * @ApiFilter(
+ *     DateFilter::class,
+ *     properties={
+ *              "published"
+ *     }
+ * )
+ * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+            "id": "exact",
+ *          "title":"partial",
+ *          "content":"partial",
+ *          "author":"exact"
+ *
+ *     }
+ * )
  * @ApiResource(
+ *     attributes={"order"={"published" : "DESC" }},
  *     itemOperations={
  *              "get"={
  *                  "normalization_context"={
@@ -95,10 +123,18 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @Groups({"get-blog-post-with-author"})
      */
     private $comments;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Image")
+     * @ORM\JoinTable()
+     * @Groups({"post","get-blog-post-with-author"})
+     */
+    private $images;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,7 +234,27 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
     {
         $this->comments = $comments;
     }
-
+    
+    public function getImages():Collection
+    {
+        return $this->images;
+    }
+    
+    /**
+     * @param Image $images
+     */
+    public function addImage(Image $images): void
+    {
+        $this->images->add($images);
+    }
+    
+    /**
+     * @param Image $images
+     */
+    public function removeImage(Image $images): void
+    {
+        $this->images->removeElement($images);
+    }
 
 
 }

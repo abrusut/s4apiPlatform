@@ -347,3 +347,55 @@ Entity/Image.php:
 4) Run migrations for create Image table
     a) php bin/console make:migration
     b) php bin/console doctrine:migrations:migrate
+
+#----------------------------------- API Platform Filters ----------------------------#
+
+Order:
+@ApiResource(
+ *     attributes={"order"={"published" : "DESC", "name": "ASC" }},
+
+Filter:
+
+Rango:
+    {{url}}/api/blog_posts?id[gt]=652&id[lt]=655 "lt"=> Menor que
+    {{url}}/api/blog_posts?id[gt]=652   --- "gt"=> Mayor que
+
+    {{url}}/api/blog_posts?id[gte]=652&id[lte]=655 "lt"=> Menor o igual que
+    {{url}}/api/blog_posts?id[gte]=652   --- "gt"=> Mayor o igual que
+* @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={
+ *              "id"
+ *     }
+ * )
+
+ Date:
+    {{url}}/api/blog_posts?published[after]=2019-08-25&published[before]=2019-09-1
+
+    {{url}}/api/blog_posts?published[strictly_after]=2019-09-04T02:00:00
+
+     * @ApiFilter(
+     *     DateFilter::class,
+     *     properties={
+     *              "published"
+     *     }
+     * )
+
+
+Search:
+    {{url}}/api/blog_posts?title=alice
+    {{url}}/api/blog_posts?content=Cat
+    {{url}}/api/blog_posts?content=Cat&title=Alice
+
+ * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+            "id": "exact",
+ *          "title":"partial",
+ *          "content":"partial",
+ *          "author":"exact"
+ *
+ *     }
+ * )
+
+
