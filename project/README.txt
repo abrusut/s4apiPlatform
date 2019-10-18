@@ -351,8 +351,18 @@ Entity/Image.php:
 #----------------------------------- API Platform Filters ----------------------------#
 
 Order:
-@ApiResource(
- *     attributes={"order"={"published" : "DESC", "name": "ASC" }},
+ * @ApiFilter(
+ *     OrderFilter::class,
+ *     properties={
+ *              "id",
+ *              "published",
+ *              "title"
+ *     },
+ *     arguments={"orderParameterName"="_order"}
+ * )
+
+    {{url}}/api/blog_posts?order[published]=desc
+    {{url}}/api/blog_posts?_order[published]=desc&_order[title]asc
 
 Filter:
 
@@ -397,5 +407,21 @@ Search:
  *
  *     }
  * )
+
+ Property Filter:
+ {{url}}/api/blog_posts?properties[]=id&properties[]=title
+ {{url}}/api/blog_posts?properties[]=id
+
+ whiteList indica las propiedades que puede agregar o quitar en el request.
+ parameterName: indica el nombre de la propiedad que pondremos en el request.
+
+ * @ApiFilter(
+  *     PropertyFilter::class,
+  *     arguments={
+  *       "parameterName": "properties",
+  *       "overrideDefaultProperties": false,
+  *       "whitelist": {"id","author","slug","title","content"}
+  *     }
+  * )
 
 
