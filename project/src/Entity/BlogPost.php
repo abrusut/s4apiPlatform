@@ -62,9 +62,16 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *     }
  * )
  * @ApiResource(
- *     attributes={"order"={"published" : "DESC" }},
+ *     attributes={"order"={"published" : "DESC" },
+ *                 "pagination_enabled"=true,
+ *                 "pagination_client_enabled"=true,
+ *                  "pagination_client_items_per_page"=true,
+ *                  "maximum_items_per_page"=30,
+ *                  "pagination_partial"= true
+ *      },
  *     itemOperations={
  *              "get"={
+*                   "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
  *                  "normalization_context"={
  *                          "groups"={"get-blog-post-with-author"}
  *                  }
@@ -74,7 +81,9 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  *              }
  *     },
  *      collectionOperations={
- *              "get",
+ *              "get"={
+ *                  "access_control"="is_granted('IS_AUTHENTICATED_FULLY')",
+ *               },
  *              "post" = {
  *                   "access_control"="is_granted('ROLE_WRITER')"
  *              }

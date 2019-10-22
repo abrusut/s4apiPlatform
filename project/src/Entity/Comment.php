@@ -13,6 +13,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 // de un comentario con su usuario y el usuario con sus comentarios genera loop
 /**
  * @ApiResource(
+ *     attributes={"order"={"published" : "DESC" },
+ *                 "pagination_enabled"=true,
+ *                 "pagination_client_enabled"=true,
+ *                  "pagination_client_items_per_page"=true,
+ *                  "maximum_items_per_page"=30,
+ *                  "pagination_partial"= false
+ *      },
  *     itemOperations={
  *              "get"={
  *
