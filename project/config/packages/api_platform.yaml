@@ -20,3 +20,6 @@ api_platform:
             partial: false # Saca de la paginacion el dato de total de registros y page anterior, primera y ultima pagina. Esto evita los query de tipo count(*) y lo hace mas performante
             client_partial: true
             partial_parameter_name: 'partial'
+    exception_to_status:
+        App\Exception\EmptyBodyException: 400 # Cambia el status code 500 de una excepcion a un codigo de HTTP que le indiquemos
+        App\Exception\InvalidConfirmationTokenException: 404
