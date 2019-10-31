@@ -39,5 +39,6 @@ class EmptyBodySubscriber implements EventSubscriberInterface
         if(null === $data){
             throw new EmptyBodyException();
         }
+        
     }
 }

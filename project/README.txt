@@ -424,4 +424,41 @@ Search:
   *     }
   * )
 
+#----------------------------------- Loggin ----------------------------#
+
+Install monolog loggin
+
+1) composer require symfony/monolog-bundle
+2) Definir nuevo channels
+    a) crear monolog.yaml en config/packages/monolog.yaml
+        monolog:
+          channels: ['token_confirmation']
+3) Validar que exista el channels
+    php bin/console debug:container log
+    Result:
+        [53] monolog.logger.token_confirmation
+
+    -> press 53 entry
+
+    Information for Service "monolog.logger.token_confirmation"
+    ===========================================================
+
+     ---------------- -----------------------------------
+      Option           Value
+     ---------------- -----------------------------------
+      Service ID       monolog.logger.token_confirmation
+      Class            Symfony\Bridge\Monolog\Logger
+      Tags             -
+      Calls            pushHandler, pushHandler
+      Public           yes
+      Synthetic        no
+      Lazy             no
+      Shared           yes
+      Abstract         no
+      Autowired        no
+      Autoconfigured   no
+     ---------------- -----------------------------------
+
+4) Inyectar logger al servicio de  UserConfirmService
+   en config/services.yaml definir:
 

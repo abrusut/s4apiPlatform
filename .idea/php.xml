@@ -106,6 +106,9 @@
       <path value="$PROJECT_DIR$/project/vendor/jms/metadata" />
       <path value="$PROJECT_DIR$/project/vendor/behat/transliterator" />
       <path value="$PROJECT_DIR$/project/vendor/vich/uploader-bundle" />
+      <path value="$PROJECT_DIR$/project/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/project/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/project/vendor/symfony/monolog-bridge" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
