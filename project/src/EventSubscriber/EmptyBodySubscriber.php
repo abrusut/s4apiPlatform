@@ -29,8 +29,15 @@ class EmptyBodySubscriber implements EventSubscriberInterface
     
     public function handleEmptyBody(GetResponseEvent $event)
     {
-        $method = $event->getRequest()->getMethod();
-        if(!in_array($method, [Request::METHOD_POST, Request::METHOD_PUT ])){
+        $request = $event->getRequest();
+        $method = $request->getMethod();
+        $route = $request->get('_route');
+        
+        // Se valida ademas del metodo, que el content type sea json ya que el admin panel envia form, de modo
+        // extra se valida que la ruta comience con 'api' (API Platform)
+        if(!in_array($method, [Request::METHOD_POST, Request::METHOD_PUT ]) ||
+            in_array($request->getContentType(), ['html', 'form']) ||
+            substr($route, 0,3) !== 'api'){
             return;
         }
         

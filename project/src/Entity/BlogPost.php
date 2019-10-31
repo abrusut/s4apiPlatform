@@ -165,7 +165,13 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
-
+    
+    public function __toString(): string
+    {
+        return $this->getTitle();
+    }
+    
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -233,7 +239,7 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
     /**
      * @return User
      */
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }

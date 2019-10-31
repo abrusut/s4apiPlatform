@@ -87,6 +87,11 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @Groups({"post"})
      */
     private $blogPost;
+    
+    public function __toString(): string
+    {
+        return substr($this->getContent(),0,20).'...';
+    }
 
     public function getBlogPost(): ?BlogPost
     {
